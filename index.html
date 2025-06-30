@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Cantinho de Leituras e Recados</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #fefcfd;
+      color: #333;
+    }
+
+    header {
+      background: url('header-bg.jpg') no-repeat center/cover;
+      text-align: center;
+      padding: 3rem 1rem;
+      color: white;
+      text-shadow: 1px 1px 3px #000;
+    }
+
+    header h1 {
+      font-size: 2.2rem;
+      margin: 0;
+    }
+
+    main {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 2rem 1rem;
+    }
+
+    .box {
+      background: #fff6f9;
+      border: 2px solid #f2c9d6;
+      border-radius: 1rem;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      padding: 1.5rem;
+      margin: 1rem;
+      max-width: 600px;
+      width: 100%;
+    }
+
+    h2 {
+      display: flex;
+      align-items: center;
+      font-size: 1.4rem;
+      color: #b05685;
+    }
+
+    .icon {
+      width: 28px;
+      margin-right: 0.5rem;
+    }
+
+    input[type="text"],
+    textarea {
+      width: 100%;
+      padding: 0.7rem;
+      border: 1px solid #ddd;
+      border-radius: 0.5rem;
+      margin: 0.5rem 0;
+    }
+
+    button {
+      background: #d480a8;
+      color: white;
+      border: none;
+      padding: 0.6rem 1.2rem;
+      margin: 0.3rem;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    button:hover {
+      background: #b05685;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+      margin: 0.5rem 0;
+    }
+
+    ul li {
+      background: #fff;
+      border: 1px solid #eee;
+      padding: 0.6rem;
+      border-radius: 0.5rem;
+      margin: 0.3rem 0;
+    }
+
+    footer {
+      background: url('footer-bg.jpg') no-repeat center/cover;
+      text-align: center;
+      color: white;
+      padding: 2rem 1rem;
+      font-size: 1rem;
+      text-shadow: 1px 1px 3px #000;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>💌 Cantinho de Leituras e Recados</h1>
+  </header>
+  <main>
+    <section class="box">
+      <h2><img src="book.png" alt="Livro" class="icon"/> Links de Leitura</h2>
+      <input id="linkInput" type="text" placeholder="Cole aqui o link do texto ou livro..." />
+      <button onclick="addLink()">Salvar Link</button>
+      <button onclick="clearLinks()">Limpar Todos</button>
+      <ul id="linkList"></ul>
+    </section>
+
+    <section class="box">
+      <h2><img src="book.png" alt="Livro" class="icon"/> Citações Favoritas</h2>
+      <textarea id="citacaoInput" placeholder="Escreva aqui a sua citação favorita..."></textarea>
+      <button onclick="addCitacao()">Salvar Citação</button>
+      <button onclick="clearCitacoes()">Limpar Todas</button>
+      <ul id="citacaoList"></ul>
+    </section>
+  </main>
+  <footer>
+    💖 Se um dia o mundo pesar, volte aqui. Sempre vai ter uma palavra boa te esperando.
+  </footer>
+
+  <script>
+    const linkInput = document.getElementById('linkInput');
+    const linkList = document.getElementById('linkList');
+    const citacaoInput = document.getElementById('citacaoInput');
+    const citacaoList = document.getElementById('citacaoList');
+
+    function loadData() {
+      const links = JSON.parse(localStorage.getItem('links') || '[]');
+      const citacoes = JSON.parse(localStorage.getItem('citacoes') || '[]');
+
+      linkList.innerHTML = '';
+      citacaoList.innerHTML = '';
+
+      links.forEach(link => {
+        const li = document.createElement('li');
+        li.innerHTML = `<a href="${link}" target="_blank">${link}</a>`;
+        linkList.appendChild(li);
+      });
+
+      citacoes.forEach(citacao => {
+        const li = document.createElement('li');
+        li.textContent = citacao;
+        citacaoList.appendChild(li);
+      });
+    }
+
+    function addLink() {
+      const link = linkInput.value.trim();
+      if (link) {
+        const links = JSON.parse(localStorage.getItem('links') || '[]');
+        links.push(link);
+        localStorage.setItem('links', JSON.stringify(links));
+        linkInput.value = '';
+        loadData();
+      }
+    }
+
+    function addCitacao() {
+      const citacao = citacaoInput.value.trim();
+      if (citacao) {
+        const citacoes = JSON.parse(localStorage.getItem('citacoes') || '[]');
+        citacoes.push(citacao);
+        localStorage.setItem('citacoes', JSON.stringify(citacoes));
+        citacaoInput.value = '';
+        loadData();
+      }
+    }
+
+    function clearLinks() {
+      if (confirm("Tem certeza que deseja apagar todos os links salvos?")) {
+        localStorage.removeItem('links');
+        loadData();
+      }
+    }
+
+    function clearCitacoes() {
+      if (confirm("Tem certeza que deseja apagar todas as citações salvas?")) {
+        localStorage.removeItem('citacoes');
+        loadData();
+      }
+    }
+
+    loadData();
+  </script>
+</body>
+</html>
